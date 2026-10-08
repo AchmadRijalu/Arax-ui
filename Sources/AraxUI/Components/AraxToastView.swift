@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct ToastView<Content: View>: View {
+public struct AraxToast<Content: View>: View {
 
     private let content: Content
 
-    init(@ViewBuilder content: () -> Content) {
+    public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
-    var body: some View {
+    public var body: some View {
         content
             .font(.subheadline.weight(.medium))
             .padding(.horizontal, 16)
@@ -25,15 +25,17 @@ struct ToastView<Content: View>: View {
     }
 }
 
-extension ToastView where Content == Label<Text, Image> {
-    init(_ message: String, systemImage: String = "checkmark.circle.fill") {
+extension AraxToast where Content == Label<Text, Image> {
+    public init(_ message: String, systemImage: String = "checkmark.circle.fill") {
         self.init { Label(message, systemImage: systemImage) }
     }
 }
 
 extension View {
 
-    func toast<Content: View>(
+    /// Overlays a transient toast at the top of the view, dismissing it after
+    /// `duration` and calling `onDismiss`.
+    public func araxToast<Content: View>(
         isPresented: Binding<Bool>,
         duration: Duration = .seconds(2),
         onDismiss: @escaping () -> Void = {},
@@ -47,8 +49,6 @@ extension View {
                     .padding(.top, 8)
                     .transition(.move(edge: .top).combined(with: .opacity))
                     .task {
-                        // Cancelled when the toast leaves the hierarchy, which
-                        // also means nobody is waiting on onDismiss anymore.
                         guard (try? await Task.sleep(for: duration)) != nil else { return }
                         isPresented.wrappedValue = false
                         onDismiss()
@@ -57,4 +57,11 @@ extension View {
         }
         .animation(.spring(duration: 0.3), value: isPresented.wrappedValue)
     }
+}
+
+#Preview {
+    Color.clear
+        .araxToast(isPresented: .constant(true)) {
+            AraxToast("Saved")
+        }
 }

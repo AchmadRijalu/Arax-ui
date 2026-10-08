@@ -1,6 +1,6 @@
 //
-//  GeneralTextField.swift
-//  Arax
+//  AraxTextField.swift
+//  AraxUI
 //
 //  Created by Achmad Rijalu  A on 08/10/26.
 //
@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 import Combine
 
-private let kInputHeight: CGFloat = 52.0
-typealias AraxImageHandler = (image: UIImage, didTap: (() -> Void)?)
+public let araxInputHeight: CGFloat = 52.0
+public typealias AraxImageHandler = (image: UIImage, didTap: (() -> Void)?)
 
-struct AraxTextField: View {
+public struct AraxTextField: View {
     @Binding var currentTypedText: String
     
     private let shouldInterceptFocus: Bool
@@ -23,7 +23,7 @@ struct AraxTextField: View {
     @FocusState private var isFocused: Bool
     private let onFocusedAction: ((Bool) -> Void)?
     
-    init(
+    public init(
         leadingIcon: UIImage? = nil,
         currentTypedText: Binding<String>,
         trailingIcon: AraxImageHandler? = nil,
@@ -39,7 +39,7 @@ struct AraxTextField: View {
         self.onFocusedAction = onFocusedAction
     }
     
-    var body: some View {
+    public var body: some View {
         TextField(
             placeholder ?? "",
             text: $currentTypedText
@@ -57,18 +57,18 @@ struct AraxTextField: View {
         .onChange(of: isFocused) { isFocused in
             onFocusedAction?(isFocused)
         }
-        .frame(height: kInputHeight)
+        .frame(height: araxInputHeight)
     }
 }
 
-struct AraxTextFieldStyle: TextFieldStyle {
-    let leadingIcon: UIImage?
-    let placeHolder: String?
-    let trailingIcon: AraxImageHandler?
-    let shouldInterceptFocus: Bool
-    let onFocusedAction: ((Bool) -> Void)?
+public struct AraxTextFieldStyle: TextFieldStyle {
+    public let leadingIcon: UIImage?
+    public let placeHolder: String?
+    public let trailingIcon: AraxImageHandler?
+    public let shouldInterceptFocus: Bool
+    public let onFocusedAction: ((Bool) -> Void)?
     
-    init(
+    public init(
         leadingIcon: UIImage?,
         placeHolder: String?,
         trailingIcon: AraxImageHandler?,
@@ -82,7 +82,7 @@ struct AraxTextFieldStyle: TextFieldStyle {
         self.onFocusedAction = onFocusedAction
     }
     
-    func _body(configuration: TextField<Self._Label>) -> some View {
+    public func _body(configuration: TextField<Self._Label>) -> some View {
         HStack(alignment: .center, spacing: 8.0) {
             if let leadingIcon: UIImage {
                 Image(uiImage: leadingIcon)
@@ -110,7 +110,7 @@ struct AraxTextFieldStyle: TextFieldStyle {
             if let trailingIcon: AraxImageHandler {
                 Rectangle()
                     .frame(width: 1.0, height: 18.0)
-                    .foregroundStyle(AraxToken.additionalColorsLine.toColor())
+                    .foregroundStyle(AraxTheme.current.additionalColorsLine.color)
                 
                 Image(uiImage: trailingIcon.image)
                     .resizable()
@@ -123,20 +123,22 @@ struct AraxTextFieldStyle: TextFieldStyle {
         }
         .padding(.vertical, 14.0)
         .padding(.horizontal, 16.0)
-        .background(AraxToken.mainColorSecondary.toColor())
+        .background(AraxTheme.current.mainColorSecondary.color)
         .clipShape(Capsule(style: .continuous))
     }
 }
 
-final class AraxTextFieldHostingController: UIHostingController<AraxTextField> {
-    init(viewModel: AraxTextFieldViewModel) {
+public final class AraxTextFieldHostingController: UIHostingController<AraxTextField> {
+    public init(viewModel: AraxTextFieldViewModel) {
         super.init(rootView: AraxTextField(
             leadingIcon: viewModel.leadingIcon,
             currentTypedText: viewModel.binding(\.currentTypedText),
             trailingIcon: viewModel.trailingIcon,
             placeholder: viewModel.placeholderText,
             shouldInterceptFocus: viewModel.shouldInterceptFocus,
-            onFocusedAction: viewModel.onTextFieldFocusDidChange(to:)
+            onFocusedAction: { isFocused in
+                MainActor.assumeIsolated { viewModel.onTextFieldFocusDidChange(to: isFocused) }
+            }
         ))
         view.backgroundColor = .clear
 
@@ -145,7 +147,7 @@ final class AraxTextFieldHostingController: UIHostingController<AraxTextField> {
         }
     }
 
-    @MainActor @objc required dynamic init?(coder aDecoder: NSCoder) {
+    @MainActor @objc required dynamic public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

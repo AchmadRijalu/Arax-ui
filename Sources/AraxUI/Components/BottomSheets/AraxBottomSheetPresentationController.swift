@@ -1,17 +1,17 @@
 //
 //  AraxBottomSheetPresentationController.swift
-//  Arax
+//  AraxUI
 //
 //  Created by Achmad Rijalu  A on 08/10/26.
 //
 
 import UIKit
 
-class AraxBottomSheetPresentationController: UIPresentationController {
+open class AraxBottomSheetPresentationController: UIPresentationController {
     
-    var dimmingView = UIView()
+    public var dimmingView = UIView()
     
-    override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
+    public override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         dimmingView.backgroundColor = .black.withAlphaComponent(0.3)
         dimmingView.alpha = 0
@@ -19,11 +19,11 @@ class AraxBottomSheetPresentationController: UIPresentationController {
         dimmingView.addGestureRecognizer(tapGesture)
     }
     
-    @objc func diTapDismiss() {
+    @objc public func diTapDismiss() {
         self.presentedViewController.dismiss(animated: true)
     }
     
-    override var frameOfPresentedViewInContainerView: CGRect {
+    open override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView = containerView else { return .zero }
         
         let targetSize = CGSize(width: containerView.bounds.width,
@@ -45,7 +45,7 @@ class AraxBottomSheetPresentationController: UIPresentationController {
         )
     }
     
-    override func presentationTransitionWillBegin() {
+    open override func presentationTransitionWillBegin() {
         guard let containerView = containerView else { return }
         
         dimmingView.frame = containerView.bounds
@@ -57,46 +57,48 @@ class AraxBottomSheetPresentationController: UIPresentationController {
         }
     }
     
-    override func dismissalTransitionWillBegin() {
+    open override func dismissalTransitionWillBegin() {
         presentedViewController.transitionCoordinator?.animate { _ in
             self.dimmingView.alpha = 0
         }
     }
     
-    override func containerViewWillLayoutSubviews() {
+    open override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
         presentedView?.frame = frameOfPresentedViewInContainerView
     }
 }
 
-class AraxBottomSheetTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+public final class AraxBottomSheetTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
+    public override init() { super.init() }
+
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return AraxBottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
     }
     
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
         return AraxBottomSheetAnimator(isPresenting: true)
     }
     
-    func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+    public func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
         return AraxBottomSheetAnimator(isPresenting: false)
     }
     
 }
 
-class AraxBottomSheetAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+public final class AraxBottomSheetAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
-    let isPresenting: Bool
+    public let isPresenting: Bool
     
-    init(isPresenting: Bool) {
+    public init(isPresenting: Bool) {
         self.isPresenting = isPresenting
     }
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.6
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let container = transitionContext.containerView
         
         guard let toView = transitionContext.view(forKey: .to),

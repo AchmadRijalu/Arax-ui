@@ -1,25 +1,25 @@
 //
 //  AraxBottomSheet.swift
-//  Arax
+//  AraxUI
 //
 //  Created by Achmad Rijalu  A on 08/10/26.
 //
 
 import UIKit
 
-class AraxBottomSheet: UIViewController {
+open class AraxBottomSheet: UIViewController {
     
-    private lazy var dismissButton: UIButton = {
+    public lazy var dismissButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        button.tintColor = .systemGray
+        button.tintColor = AraxTheme.current.grayscale70.uiColor
         button.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
         return button
     }()
     
-    private lazy var imageView: UIImageView = {
+    public lazy var imageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.contentMode = .scaleAspectFit
         imageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
@@ -28,27 +28,27 @@ class AraxBottomSheet: UIViewController {
         return imageView
     }()
     
-    private lazy var titleLabel: UILabel = {
+    public lazy var titleLabel: UILabel = {
        let label = UILabel(frame: .zero)
         label.font = .systemFont(ofSize: 17, weight: .medium)
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.textColor = .black
+        label.textColor = AraxTheme.current.additionalColorsBlack.uiColor
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var messageLabel: UILabel = {
+    public lazy var messageLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = .systemFont(ofSize: 14, weight: .regular)
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.textColor = .systemGray
+        label.textColor = AraxTheme.current.grayscale70.uiColor
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var verticalStackView: UIStackView = {
+    public lazy var verticalStackView: UIStackView = {
         let stackView = UIStackView(frame: .zero)
         stackView.axis = .vertical
         stackView.spacing = 8
@@ -56,31 +56,30 @@ class AraxBottomSheet: UIViewController {
         return stackView
     }()
     
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
     
-    init(image: UIImage?, title: String?, message: String?) {
+    public init(image: UIImage?, title: String?, message: String?) {
         super.init(nibName: nil, bundle: nil)
-        setupView()
-        self.imageView.image = image
-        self.titleLabel.text = title
-        self.messageLabel.text = message
+        imageView.image = image
+        titleLabel.text = title
+        messageLabel.text = message
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func dismissTapped() {
+    @objc public func dismissTapped() {
         dismiss(animated: true)
     }
 }
 
 extension AraxBottomSheet {
-    private func setupView() {
-        view.backgroundColor = .white
+    public func setupView() {
+        view.backgroundColor = AraxTheme.current.additionalColorsWhite.uiColor
         view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
         

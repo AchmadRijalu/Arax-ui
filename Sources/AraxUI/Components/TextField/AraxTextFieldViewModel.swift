@@ -1,6 +1,6 @@
 //
-//  GeneralTextFieldViewModel.swift
-//  Arax
+//  AraxTextFieldViewModel.swift
+//  AraxUI
 //
 //  Created by Achmad Rijalu A on 08/10/26.
 //
@@ -9,21 +9,23 @@ import Foundation
 import SwiftUI
 import Combine
 
-protocol AraxTextFieldViewModelDelegate: AnyObject {
+@MainActor
+public protocol AraxTextFieldViewModelDelegate: AnyObject {
     func notifyAraxTextFieldDidChangeFocus(_ viewModel: AraxTextFieldViewModel, isFocused: Bool)
 }
 
-final class AraxTextFieldViewModel: ObservableObject {
-    weak var delegate: AraxTextFieldViewModelDelegate?
+@MainActor
+public final class AraxTextFieldViewModel: ObservableObject {
+    public weak var delegate: AraxTextFieldViewModelDelegate?
 
-    @Published var currentTypedText: String
+    @Published public var currentTypedText: String
 
-    let leadingIcon: UIImage?
-    let trailingIcon: AraxImageHandler?
-    let placeholderText: String?
-    let shouldInterceptFocus: Bool
+    public let leadingIcon: UIImage?
+    public let trailingIcon: AraxImageHandler?
+    public let placeholderText: String?
+    public let shouldInterceptFocus: Bool
 
-    init(
+    public init(
         leadingIcon: UIImage? = nil,
         placeholderText: String? = nil,
         currentTypedText: String = "",
@@ -39,7 +41,7 @@ final class AraxTextFieldViewModel: ObservableObject {
         self.delegate = delegate
     }
 
-    func onTextFieldFocusDidChange(to newFocus: Bool) {
+    public func onTextFieldFocusDidChange(to newFocus: Bool) {
         delegate?.notifyAraxTextFieldDidChangeFocus(self, isFocused: newFocus)
     }
 }

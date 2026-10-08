@@ -1,42 +1,51 @@
 //
 //  AraxToolbar.swift
-//  Arax
+//  AraxUI
 //
 //  Created by Achmad Rijalu  A on 08/10/26.
 //
 
 import SwiftUI
 
-struct AraxToolbar: View {
-    var action: () -> Void = {}
-    var title: String
-    var foregroundColor: Color?
-    var backgroundColor: Color?
+public struct AraxToolbar: View {
+    private let title: String
+    private let foregroundColor: Color
+    private let backgroundColor: Color
+    private let action: () -> Void
 
-    var body: some View {
+    public init(
+        title: String,
+        foregroundColor: Color? = nil,
+        backgroundColor: Color? = nil,
+        action: @escaping () -> Void = {}
+    ) {
+        self.title = title
+        self.foregroundColor = foregroundColor ?? AraxTheme.current.additionalColorsBlack.color
+        self.backgroundColor = backgroundColor ?? AraxTheme.current.mainColorSecondary.color
+        self.action = action
+    }
+
+    public var body: some View {
         ZStack {
             HStack {
-                Button {
-                    action()
-                } label: {
+                Button(action: action) {
                     Image(systemName: "chevron.left")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 20, height: 20)
-                        .foregroundColor(.blue)
+                        .foregroundStyle(AraxTheme.current.mainColorPrimary.color)
                 }
                 Spacer()
             }
             Text(title)
-                .foregroundStyle(Color("SecondaryColor"))
+                .foregroundStyle(foregroundColor)
                 .font(.system(size: 17, weight: .semibold))
         }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity, maxHeight: 55)
-        .background(.gray)
+        .background(backgroundColor)
     }
 }
-
 
 #Preview {
     AraxToolbar(title: "Title")
