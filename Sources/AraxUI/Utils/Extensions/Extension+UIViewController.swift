@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIViewController {
-    func embedViewToViewController(_ hosting: UIViewController, in container: UIView) {
+    public func embedViewToViewController(_ hosting: UIViewController, in container: UIView) {
         container.clipsToBounds = true
         
         addChild(hosting)
