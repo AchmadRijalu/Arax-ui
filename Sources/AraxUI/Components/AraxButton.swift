@@ -36,7 +36,7 @@ public struct AraxButton<Content: View>: View {
             content()
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(foregroundColor)
-                .frame(height: 56)
+                .frame(height: 48)
                 .background(backgroundColor)
                 .clipShape(.capsule)
                 .overlay {

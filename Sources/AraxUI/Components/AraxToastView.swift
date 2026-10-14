@@ -32,9 +32,7 @@ extension AraxToast where Content == Label<Text, Image> {
 }
 
 extension View {
-
-    /// Overlays a transient toast at the top of the view, dismissing it after
-    /// `duration` and calling `onDismiss`.
+    
     public func araxToast<Content: View>(
         isPresented: Binding<Bool>,
         duration: Duration = .seconds(2),
