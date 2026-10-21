@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "AraxUI",
-    platforms: [.iOS(.v16)],
+    platforms: [.iOS(.v17)],
     products: [.library(name: "AraxUI", targets: ["AraxUI"])],
     targets: [
         .target(name: "AraxUI"),

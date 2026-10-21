@@ -14,6 +14,19 @@ extension View {
         clipShape(RoundedRectangle(cornerRadius: araxBaseCornerRadius, style: .continuous))
     }
 
+    /// Rounds the top corners only. For containers pinned to the bottom edge —
+    /// a sheet, a sticky footer — where rounding the bottom corners would curve
+    /// them away from the screen edge and leave a gap.
+    public func baseTopRoundedCorner() -> some View {
+        clipShape(
+            .rect(
+                topLeadingRadius: araxBaseCornerRadius,
+                topTrailingRadius: araxBaseCornerRadius,
+                style: .continuous
+            )
+        )
+    }
+
     public func capsuleRounded() -> some View {
         clipShape(Capsule(style: .continuous))
     }
