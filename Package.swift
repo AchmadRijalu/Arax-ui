@@ -8,7 +8,7 @@ let package = Package(
     platforms: [.iOS(.v16)],
     products: [.library(name: "AraxUI", targets: ["AraxUI"])],
     targets: [
-        .target(name: "AraxUI"),
+        .target(name: "AraxUI", resources: [.process("Utils/Font")]),
         .testTarget(name: "AraxUITests", dependencies: ["AraxUI"])
     ]
 )
